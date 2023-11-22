@@ -109,6 +109,8 @@ def cadastrarPaciente():
     DT_NASCIMENTO = input("Data de nascimento: ")
     lista_de_dados_paciente.append(DT_NASCIMENTO)
 
+    return lista_de_dados_paciente
+
 def INSERIR_DADOS_PACIENTE(lista_de_dados_paciente):
     conn = getConnection()
     cursor = conn.cursor()
@@ -138,5 +140,134 @@ def DROP_TABLE_PACIENTE():
         cursor.close
         conn.close
 
+def CREATE_TABLE_RAMO():
+    conn = getConnection()
+    cursor = conn.cursor()
+    sql_RAMO = """
+    CREATE TABLE TB_RAMO(
+    ID_RAMO NUMBER(19,0),
+    NM_RAMO VARCHAR2(255),  
+    CONSTRAINT PK_ID_RAMO PRIMARY KEY (ID_RAMO)
+);
+"""
+    try:
+        cursor.execute(sql_RAMO)
+        print("Tabela RAMO criada")
+    except Exception as e:
+        print(f"erro ao criar a tabela RAMO: {e}")
+    finally:
+        cursor.close
+        conn.close
 
+
+def cadastrarRamo():
+    print("Cadastre um ramo a seguir")
+    lista_de_dados_ramo = []
+    ID_RAMO = int(input("id: "))
+    lista_de_dados_ramo.append(ID_RAMO)
+
+    NM_RAMO = input("digite o nome do rmao: ")
+    lista_de_dados_ramo.append(NM_RAMO)
+
+    return lista_de_dados_ramo
+
+def INSERIR_DADOS_RAMO(lista_de_dados_ramo):
+    conn = getConnection()
+    cursor = conn.cursor()
+    sql_query = "INSERT INTO RAMO (ID_RAMO, NM_RMAO) VALUES (:0, :1)"
+    try:
+        cursor.execute(sql_query(lista_de_dados_ramo[0], lista_de_dados_ramo[1]))
+        conn.commit()
+    except Exception as e:
+        print(f"Erro ao inserir o registro do ramo: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+
+def DROP_TABLE_RAMO():
+    conn = getConnection()
+    cursor = conn.cursor()
+    sql_enderecodrop = """
+    DROP TABLE RAMO;
+"""
+    try:
+        cursor.execute(sql_enderecodrop)
+        print("tabela RAMO dropada")
+    except Exception as e:
+        print(f"Erro ao dropar a tabela RAMO: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+
+def CREATE_TABLE_EMPRESA():
+    conn = getConnection()
+    cursor = conn.cursor()
+    sql_EMPRESA = """
+    ID_EMPRESA NUMERIC(19,0),
+    NM_EMPRESA VARCHAR2(255),
+    E_MAIL VARCHAR(50),
+    NR_CNPJ VARCHAR2(14),
+    RAMO NUMBER(19,0),
+    CONSTRAINT PK_ID_EMPRESA PRIMARY KEY (ID_EMPRESA),
+    CONSTRAINT fk_TB_EMPRESA_TB_RAMO FOREIGN KEY (ID_RAMO) REFERENCES TB_RAMO(ID_RAMO)
+);
+"""
+    try:
+        cursor.execute(sql_EMPRESA)
+        print("Tabela EMPRESSA criada")
+    except Exception as e:
+        print(f"Erro ao criar a tabela EMPRESA: {e}")
+    finally:
+        cursor.close
+        conn.close
+
+def cadastrarEmpresa():
+    print("Cadastre uma empresa!")
+    lista_de_dados_empresa = []
+    ID_EMPRESA = int(input("id: "))
+    lista_de_dados_empresa.append(ID_EMPRESA)
+
+    NM_EMPRESA = input("Nome da empresa: ")
+    lista_de_dados_empresa.append(NM_EMPRESA)
+
+    E_MAIL = input("Digite o email da empresa: ")
+    lista_de_dados_empresa(E_MAIL)
+
+    NR_CNPJ = input("Digite o cnpj da empresa: ")
+    lista_de_dados_empresa.append(NR_CNPJ)
+
+    RAMO = int(input("Digite o ramo da empresa: "))
+    lista_de_dados_empresa.append(RAMO)
+
+    return lista_de_dados_empresa
+
+
+def INSERIR_DADOS_EMPRESA(lista_de_dados_empresa):
+    conn = getConnection()
+    cursor = conn.cursor()
+    sql_query = "INSET INTO EMPRESA (ID_EMPRESA, NM_EMPRESA, E_MAIL, NR_CNPJ, RAMO ) VALUES (:0, :1, :2, :3, :4)"
+    try:
+        cursor.excute(sql_query(lista_de_dados_empresa[0], lista_de_dados_empresa[1], lista_de_dados_empresa[2], lista_de_dados_empresa[3], lista_de_dados_empresa[4]))
+        conn.commit()
+        print("Registro da empresa inserido com sucesso!")
+    except Exception as e:
+        print(f"Erro ao inserir o registro da empresa: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+
+def DROP_TABLE_EMPRESA():
+    conn = getConnection()
+    cursor = conn.cursor()
+    sql_enderecodrop ="""
+    DROP TABLE EMPRESA;
+"""
+    try:
+        cursor.execute(sql_enderecodrop)
+        print("Tabela EMPRESA dropada")
+    except Exception as e:
+        print(f"Erro ao dropar a tabela EMPRESA: {e}")
+    finally:
+        cursor.close
+        conn.close
 
