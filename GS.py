@@ -19,18 +19,26 @@ def getConnection():
 def findById_tbAreas():
     conn = getConnection()
     cursor = conn.cursor()
-    id_escolhido = int(input("Digite o ID desejado: "))
-    sql_id = f"""
-    SELECT * FROM TB_AREAS WHERE id_usario = {id_escolhido}
-    )"""
+
     try:
-        cursor.execute(sql_id)
-        print("ID enconstrado com sucesso")
+        id_escolhido = int(input("Digite o ID desejado: "))
+        # Use um placeholder para o valor do ID
+        sql_id = f"""
+            SELECT * FROM TB_AREAS
+            WHERE ID_AREA = :id_escolhido
+        """
+        # Utilize o método execute com um dicionário de parâmetros
+        cursor.execute(sql_id, {"id_escolhido": id_escolhido})
+
         result = cursor.fetchall()
-        for row in result:
-            print(row)
+        if result:
+            print("ID encontrado com sucesso:")
+            for row in result:
+                print(row)
+        else:
+            print("ID não encontrado.")
     except Exception as e:
-        print(f"ID não encontrado: {e}")
+        print(f"Erro ao executar a consulta: {e}")
     finally:
         cursor.close()
         conn.close()
@@ -41,7 +49,7 @@ def findById_tbPaciente():
     cursor = conn.cursor()
     id_escolhido = int(input("Digite o ID desejado: "))
     sql_id = f"""
-    SELECT * FROM TB_PACIENTE WHERE id_usario = {id_escolhido}
+    SELECT * FROM TB_PACIENTE WHERE ID_PACIENTE = {id_escolhido}
     )"""
     try:
         cursor.execute(sql_id)
@@ -61,7 +69,7 @@ def findById_tbEmpersa():
     cursor = conn.cursor()
     id_escolhido = int(input("Digite o ID desejado: "))
     sql_id = f"""
-    SELECT * FROM TB_EMPRESA WHERE id_usario = {id_escolhido}
+    SELECT * FROM TB_EMPRESA WHERE ID_EMPRESA = {id_escolhido}
     )"""
     try:
         cursor.execute(sql_id)
@@ -81,7 +89,7 @@ def findById_tbRamo():
     cursor = conn.cursor()
     id_escolhido = int(input("Digite o ID desejado: "))
     sql_id = f"""
-    SELECT * FROM TB_RAMO WHERE id_usario = {id_escolhido}
+    SELECT * FROM TB_RAMO WHERE ID_RAMO = {id_escolhido}
     )"""
     try:
         cursor.execute(sql_id)
@@ -101,7 +109,7 @@ def findById_tbServico():
     cursor = conn.cursor()
     id_escolhido = int(input("Digite o ID desejado: "))
     sql_id = f"""
-    SELECT * FROM TB_SERVICOS WHERE id_usario = {id_escolhido}
+    SELECT * FROM TB_SERVICOS WHERE ID_SERVICO = {id_escolhido}
     )"""
     try:
         cursor.execute(sql_id)
@@ -121,7 +129,7 @@ def findById_tbFuncionarios():
     cursor = conn.cursor()
     id_escolhido = int(input("Digite o ID desejado: "))
     sql_id = f"""
-    SELECT * FROM TB_FUNCIONARIOS WHERE id_usario = {id_escolhido}
+    SELECT * FROM TB_FUNCIONARIOS WHERE ID_FUNCIONARIO = {id_escolhido}
     )"""
     try:
         cursor.execute(sql_id)
@@ -255,7 +263,7 @@ def deleteById_tbAreas():
     cursor = conn.cursor()
     id_escolhido = int(input('Digite o ID desejado: '))
     sql_id = f"""
-    DELETE FROM TB_AREAS WHERE id_usuario = {id_escolhido}
+    DELETE FROM TB_AREAS WHERE ID_AREA = {id_escolhido}
 """
     try:
         cursor.execute(sql_id)
@@ -272,7 +280,7 @@ def deleteById_tbPaciente():
     cursor = conn.cursor()
     id_escolhido = int(input('Digite o ID desejado: '))
     sql_id = f"""
-    DELETE FROM TB_PACIENTE WHERE id_usuario = {id_escolhido}
+    DELETE FROM TB_PACIENTE WHERE ID_PACIENTE = {id_escolhido}
 """
     try:
         cursor.execute(sql_id)
@@ -289,7 +297,7 @@ def deleteById_tbEmpresa():
     cursor = conn.cursor()
     id_escolhido = int(input('Digite o ID desejado: '))
     sql_id = f"""
-    DELETE FROM TB_EMPRESA WHERE id_usuario = {id_escolhido}
+    DELETE FROM TB_EMPRESA WHERE ID_EMPRESA = {id_escolhido}
 """
     try:
         cursor.execute(sql_id)
@@ -306,7 +314,7 @@ def deleteById_tbRamo():
     cursor = conn.cursor()
     id_escolhido = int(input('Digite o ID desejado: '))
     sql_id = f"""
-    DELETE FROM TB_RAMO WHERE id_usuario = {id_escolhido}
+    DELETE FROM TB_RAMO WHERE ID_RAMO = {id_escolhido}
 """
     try:
         cursor.execute(sql_id)
@@ -323,7 +331,7 @@ def deleteById_tbServicos():
     cursor = conn.cursor()
     id_escolhido = int(input('Digite o ID desejado: '))
     sql_id = f"""
-    DELETE FROM TB_SERVICOS WHERE id_usuario = {id_escolhido}
+    DELETE FROM TB_SERVICOS WHERE ID_SERVICO = {id_escolhido}
 """
     try:
         cursor.execute(sql_id)
@@ -340,7 +348,7 @@ def deleteById_tbFuncionarios():
     cursor = conn.cursor()
     id_escolhido = int(input('Digite o ID desejado: '))
     sql_id = f"""
-    DELETE FROM TB_FUNCIONARIOS WHERE id_usuario = {id_escolhido}
+    DELETE FROM TB_FUNCIONARIOS WHERE ID_FUNCIONARIO = {id_escolhido}
 """
     try:
         cursor.execute(sql_id)
@@ -451,22 +459,31 @@ def deleteAll_tbFuncionario():
         conn.close
 
 
+"""5. Upadates"""
+
+
 def update_tbArea():
     conn = getConnection()
     cursor = conn.cursor()
 
     try:
         id_escolhido = int(input('Digite o ID desejado: '))
-        area = input('Área que deseja cadastrar em nosso banco: ')
-        sql_update = f"""
+        nova_regiao = input('Nova região: ')
+        novo_cep = int(input('Novo CEP: '))
+
+        # Use :nome_da_variavel no lugar de ? no Oracle
+        sql_update = """
             UPDATE TB_AREAS
-            SET area = ?
-            WHERE ID_AREA = ?
+            SET REGIAO = :nova_regiao, CEP = :novo_cep
+            WHERE ID_AREA = :id_escolhido
         """
-        cursor.execute(sql_update, (area, id_escolhido))
+
+        # Utilize o método execute com um dicionário de parâmetros
+        cursor.execute(sql_update, {"nova_regiao": nova_regiao, "novo_cep": novo_cep, "id_escolhido": id_escolhido})
+
         conn.commit()
         print("Informações atualizadas com sucesso!")
-    except Exception as e:
+    except cx_Oracle.Error as e:
         print(f'Erro ao atualizar as informações: {e}')
     finally:
         cursor.close()
@@ -479,17 +496,22 @@ def update_tbPaciente():
 
     try:
         id_escolhido = int(input('Digite o ID desejado: '))
-        nome = input('Nome do paciente que deseja cadastrar em nosso banco: ')
+        novo_nome = input('Novo nome do paciente: ')
+        novo_cpf = input('Novo CPF do paciente: ')
+
+        # Use :nome_da_variavel no lugar de ? no Oracle
         sql_update = """
             UPDATE TB_PACIENTE
-            SET nome = ?, CPF = 'xxx.xxx.xxx-xx'
-            WHERE ID_PACIENTE = ?
+            SET NM_PACIENTE = :novo_nome, CPF = :novo_cpf
+            WHERE ID_PACIENTE = :id_escolhido
         """
-        cursor.execute(sql_update, (nome, id_escolhido))
-        conn.commit()
 
+        # Utilize o método execute com um dicionário de parâmetros
+        cursor.execute(sql_update, {"novo_nome": novo_nome, "novo_cpf": novo_cpf, "id_escolhido": id_escolhido})
+
+        conn.commit()
         print("Informações atualizadas com sucesso!")
-    except Exception as e:
+    except cx_Oracle.Error as e:
         print(f'Erro ao atualizar as informações: {e}')
     finally:
         cursor.close()
@@ -502,16 +524,25 @@ def update_tbEmpresa():
 
     try:
         id_escolhido = int(input('Digite o ID desejado: '))
-        empresa = input('Empresa terceira que deseja cadastrar em nosso banco: ')
+        novo_nome = input('Novo nome da empresa: ')
+        novo_cnpj = input('Novo CNPJ da empresa: ')
+        novo_email = input('Novo e-mail da empresa: ')
+        novo_ramo = int(input('Novo ramo da empresa: '))
+
+        # Use :nome_da_variavel no lugar de ? no Oracle
         sql_update = """
             UPDATE TB_EMPRESA
-            SET empresa = ?, email = 'novo@email.com'
-            WHERE ID_EMPRESA = ?
+            SET NM_EMPRESA = :novo_nome, NR_CNPJ = :novo_cnpj, EMAIL = :novo_email, RAMO = :novo_ramo
+            WHERE ID_EMPRESA = :id_escolhido
         """
-        cursor.execute(sql_update, (empresa, id_escolhido))
+
+        # Utilize o método execute com um dicionário de parâmetros
+        cursor.execute(sql_update, {"novo_nome": novo_nome, "novo_cnpj": novo_cnpj, "novo_email": novo_email,
+                                    "novo_ramo": novo_ramo, "id_escolhido": id_escolhido})
+
         conn.commit()
         print("Informações atualizadas com sucesso!")
-    except Exception as e:
+    except cx_Oracle.Error as e:
         print(f'Erro ao atualizar as informações: {e}')
     finally:
         cursor.close()
@@ -524,16 +555,21 @@ def update_tbRamo():
 
     try:
         id_escolhido = int(input('Digite o ID desejado: '))
-        nome = input('Ramo que deseja cadastrar em nosso banco: ')
+        novo_nome = input('Novo nome do ramo: ')
 
+        # Use :nome_da_variavel no lugar de ? no Oracle
         sql_update = """
             UPDATE TB_RAMO
-            SET nome = ? WHERE ID_RAMO = ?
+            SET NM_RAMO = :novo_nome
+            WHERE ID_RAMO = :id_escolhido
         """
-        cursor.execute(sql_update, (nome, id_escolhido))
+
+        # Utilize o método execute com um dicionário de parâmetros
+        cursor.execute(sql_update, {"novo_nome": novo_nome, "id_escolhido": id_escolhido})
+
         conn.commit()
         print("Informações atualizadas com sucesso!")
-    except Exception as e:
+    except cx_Oracle.Error as e:
         print(f'Erro ao atualizar as informações: {e}')
     finally:
         cursor.close()
@@ -546,16 +582,21 @@ def update_tbServico():
 
     try:
         id_escolhido = int(input('Digite o ID desejado: '))
-        nome = input('Serviço que deseja cadastrar em nosso banco: ')
+        novo_nome = input('Novo nome do serviço: ')
+
+        # Use :nome_da_variavel no lugar de ? no Oracle
         sql_update = """
             UPDATE TB_SERVICOS
-            SET nome = ? WHERE ID_SERVICO = ?
+            SET DS_SERVICO = :novo_nome
+            WHERE ID_SERVICO = :id_escolhido
         """
-        cursor.execute(sql_update, (nome, id_escolhido))
-        conn.commit()
 
+        # Utilize o método execute com um dicionário de parâmetros
+        cursor.execute(sql_update, {"novo_nome": novo_nome, "id_escolhido": id_escolhido})
+
+        conn.commit()
         print("Informações atualizadas com sucesso!")
-    except Exception as e:
+    except cx_Oracle.Error as e:
         print(f'Erro ao atualizar as informações: {e}')
     finally:
         cursor.close()
@@ -568,17 +609,21 @@ def update_tbFuncionario():
 
     try:
         id_escolhido = int(input('Digite o ID desejado: '))
-        nome = input('Nome do funcionário que deseja cadastrar em nosso banco: ')
+        novo_nome = input('Novo nome do funcionário: ')
 
+        # Use :nome_da_variavel no lugar de ? no Oracle
         sql_update = """
-            UPDATE FUNCIONARIOS
-            SET nome = ? WHERE ID_FUNCIONARIO = ?
+            UPDATE TB_FUNCIONARIOS
+            SET NM_FUNCIONARIO = :novo_nome
+            WHERE ID_FUNCIONARIO = :id_escolhido
         """
-        cursor.execute(sql_update, (nome, id_escolhido))
-        conn.commit()
 
+        # Utilize o método execute com um dicionário de parâmetros
+        cursor.execute(sql_update, {"novo_nome": novo_nome, "id_escolhido": id_escolhido})
+
+        conn.commit()
         print("Informações atualizadas com sucesso!")
-    except Exception as e:
+    except cx_Oracle.Error as e:
         print(f'Erro ao atualizar as informações: {e}')
     finally:
         cursor.close()
@@ -821,486 +866,283 @@ def insert_area(nome_funcionario, cpf_funcionario, setor_funcionario, empresa_fu
 
 
 def menu():
-    print("""
+    while True:
+        print("""
+        Qual operação deseja fazer?
+        1 - tbArea
+        2 - tbPaciente
+        3 - tbEmpresa
+        4 - tbRamo
+        5 - tbServico
+        6 - tbFuncionario
+        7 - Sair
+        """)
 
-Qual operação deseja fazer?
-
-1 - tbArea
-2 - tbPaciente
-3 - tbEmpresa
-4 - tbRamo
-5 - tbServico
-6 - tbFuncionario          
-
-""")
-    op = 0
-    while op == 0:
         try:
             escolha = int(input('Digite a opção desejada: '))
 
-            if escolha < 1 or escolha > 5:
-                print('Opção invalida, digite novamente!')
-                op = 0
-            elif escolha == 1:
+            if escolha == 1:
                 tbArea()
-
             elif escolha == 2:
                 tbPaciente()
-
             elif escolha == 3:
                 tbEmpresa()
-
             elif escolha == 4:
                 tbRamo()
-
             elif escolha == 5:
                 tbServico()
-
             elif escolha == 6:
                 tbFuncionario()
+            elif escolha == 7:
+                print("Saindo do programa.")
+                break
+            else:
+                print('Opção inválida, digite novamente!')
 
         except ValueError:
             print('Opção inválida. Por favor, digite um número.')
-            op = 0
 
 
 def tbArea():
-    op = 0
-    while op == 0:
+    while True:
         print("""
-    Qual operação deseja fazer?
-    1 - Consutar Id.
-    2 - Consutar tabela inteira.
-    3 - Fazer Update de informação
-    4 - Deletar Id.
-    5 - Deletar tudo.
-    """)
+        Qual operação deseja fazer na tabela tbArea?
+        1 - Consultar por ID.
+        2 - Consultar tabela inteira.
+        3 - Fazer Update de informação.
+        4 - Deletar por ID.
+        5 - Deletar tudo.
+        6 - Sair.
+        """)
+
         try:
             escolha = int(input('Digite a opção desejada: '))
 
-            if escolha < 1 or escolha > 5:
-                print('Opção invalida, digite novamente!')
-                op = 0
-            elif escolha == 1:
+            if escolha == 1:
                 findById_tbAreas()
-
             elif escolha == 2:
                 getAll_tbAreas()
-
             elif escolha == 3:
                 update_tbArea()
-
             elif escolha == 4:
                 deleteById_tbAreas()
-
             elif escolha == 5:
                 deleteAll_tbArea()
-            print('''
-    Deseja algo a mais nessa tabela?
-    1 - sim
-    2 - não
-            ''')
-            try:
-                res = 0
-                while res == 0:
-                    opcao = int(input('Digite a opção desejada: '))
+            elif escolha == 6:
+                print("Saindo da tabela tbArea.")
+                break
+            else:
+                print('Opção inválida, digite novamente!')
 
-                    if opcao == 1:
-                        res = 1
-                        op = 0
-                    elif opcao == 2:
-                        print('''
-    Deseja algo a mais nessa tabela?
-    1 - sim
-    2 - não
-                        ''')
-                        try:
-                            resposta = 0
-                            while resposta == 0:
-                                opc = int(input('Digite a opção desejada: '))
-                                if opc == 1:
-                                    menu()
-                                    resposta == 1
-                                    res = 1
-                                    op = 1
-                                elif opc == 2:
-                                    break
+            continuar = input('Deseja realizar outra operação nesta tabela? (s/n): ')
+            if continuar.lower() != 's':
+                print("Saindo da tabela tbArea.")
+                break
 
-                                elif opc != 1 or opc != 2:
-                                    print('Opção invalida, digite novamente!')
-                        except ValueError:
-                            print('Opção inválida. Por favor, digite um número.')
-            except ValueError:
-                print('Opção inválida. Por favor, digite um número.')
         except ValueError:
             print('Opção inválida. Por favor, digite um número.')
-            op = 0
 
 
 def tbPaciente():
-    op = 0
-    while op == 0:
+    while True:
         print("""
-    Qual operação deseja fazer?
-    1 - Consutar Id.
-    2 - Consutar tabela inteira.
-    3 - Fazer Update de informação
-    4 - Deletar Id.
-    5 - Deletar tudo.
-    """)
+        Qual operação deseja fazer na tabela tbPaciente?
+        1 - Consultar por ID.
+        2 - Consultar tabela inteira.
+        3 - Fazer Update de informação.
+        4 - Deletar por ID.
+        5 - Deletar tudo.
+        6 - Sair.
+        """)
+
         try:
             escolha = int(input('Digite a opção desejada: '))
 
-            if escolha < 1 or escolha > 5:
-                print('Opção invalida, digite novamente!')
-                op = 0
-            elif escolha == 1:
+            if escolha == 1:
                 findById_tbPaciente()
-
             elif escolha == 2:
                 getAll_tbPaciente()
-
             elif escolha == 3:
                 update_tbPaciente()
-
             elif escolha == 4:
                 deleteById_tbPaciente()
-
             elif escolha == 5:
                 deleteAll_tbPaciente()
-            print('''
-    Deseja algo a mais nessa tabela?
-    1 - sim
-    2 - não
-            ''')
-            try:
-                res = 0
-                while res == 0:
-                    opcao = int(input('Digite a opção desejada: '))
+            elif escolha == 6:
+                print("Saindo da tabela tbPaciente.")
+                break
+            else:
+                print('Opção inválida, digite novamente!')
 
-                    if opcao == 1:
-                        res = 1
-                        op = 0
-                    elif opcao == 2:
-                        print('''
-    Deseja algo a mais nessa tabela?
-    1 - sim
-    2 - não
-                        ''')
-                        try:
-                            resposta = 0
-                            while resposta == 0:
-                                opc = int(input('Digite a opção desejada: '))
-                                if opc == 1:
-                                    menu()
-                                    resposta == 1
-                                    res = 1
-                                    op = 1
-                                elif opc == 2:
-                                    break
+            continuar = input('Deseja realizar outra operação nesta tabela? (s/n): ')
+            if continuar.lower() != 's':
+                print("Saindo da tabela tbPaciente.")
+                break
 
-                                elif opc != 1 or opc != 2:
-                                    print('Opção invalida, digite novamente!')
-                        except ValueError:
-                            print('Opção inválida. Por favor, digite um número.')
-            except ValueError:
-                print('Opção inválida. Por favor, digite um número.')
         except ValueError:
             print('Opção inválida. Por favor, digite um número.')
-            op = 0
 
 
 def tbEmpresa():
-    op = 0
-    while op == 0:
+    while True:
         print("""
-    Qual operação deseja fazer?
-    1 - Consutar Id.
-    2 - Consutar tabela inteira.
-    3 - Fazer Update de informação
-    4 - Deletar Id.
-    5 - Deletar tudo.
-    """)
+        Qual operação deseja fazer na tabela tbEmpresa?
+        1 - Consultar por ID.
+        2 - Consultar tabela inteira.
+        3 - Fazer Update de informação.
+        4 - Deletar por ID.
+        5 - Deletar tudo.
+        6 - Sair.
+        """)
+
         try:
             escolha = int(input('Digite a opção desejada: '))
 
-            if escolha < 1 or escolha > 5:
-                print('Opção invalida, digite novamente!')
-                op = 0
-            elif escolha == 1:
+            if escolha == 1:
                 findById_tbEmpersa()
-
             elif escolha == 2:
                 getAll_tbEmpresa()
-
             elif escolha == 3:
                 update_tbEmpresa()
-
             elif escolha == 4:
                 deleteById_tbEmpresa()
-
             elif escolha == 5:
                 deleteAll_tbEmpresa()
-            print('''
-    Deseja algo a mais nessa tabela?
-    1 - sim
-    2 - não
-            ''')
-            try:
-                res = 0
-                while res == 0:
-                    opcao = int(input('Digite a opção desejada: '))
+            elif escolha == 6:
+                print("Saindo da tabela tbEmpresa.")
+                break
+            else:
+                print('Opção inválida, digite novamente!')
 
-                    if opcao == 1:
-                        res = 1
-                        op = 0
-                    elif opcao == 2:
-                        print('''
-    Deseja algo a mais nessa tabela?
-    1 - sim
-    2 - não
-                        ''')
-                        try:
-                            resposta = 0
-                            while resposta == 0:
-                                opc = int(input('Digite a opção desejada: '))
-                                if opc == 1:
-                                    menu()
-                                    resposta == 1
-                                    res = 1
-                                    op = 1
-                                elif opc == 2:
-                                    break
+            continuar = input('Deseja realizar outra operação nesta tabela? (s/n): ')
+            if continuar.lower() != 's':
+                print("Saindo da tabela tbEmpresa.")
+                break
 
-                                elif opc != 1 or opc != 2:
-                                    print('Opção invalida, digite novamente!')
-                        except ValueError:
-                            print('Opção inválida. Por favor, digite um número.')
-            except ValueError:
-                print('Opção inválida. Por favor, digite um número.')
         except ValueError:
             print('Opção inválida. Por favor, digite um número.')
-            op = 0
 
 
 def tbRamo():
-    op = 0
-    while op == 0:
+    while True:
         print("""
-    Qual operação deseja fazer?
-    1 - Consutar Id.
-    2 - Consutar tabela inteira.
-    3 - Fazer Update de informação
-    4 - Deletar Id.
-    5 - Deletar tudo.
-    """)
+        Qual operação deseja fazer na tabela tbRamo?
+        1 - Consultar por ID.
+        2 - Consultar tabela inteira.
+        3 - Fazer Update de informação.
+        4 - Deletar por ID.
+        5 - Deletar tudo.
+        6 - Sair.
+        """)
+
         try:
             escolha = int(input('Digite a opção desejada: '))
 
-            if escolha < 1 or escolha > 5:
-                print('Opção invalida, digite novamente!')
-                op = 0
-            elif escolha == 1:
+            if escolha == 1:
                 findById_tbRamo()
-
             elif escolha == 2:
                 getAll_tbRamo()
-
             elif escolha == 3:
                 update_tbRamo()
-
             elif escolha == 4:
                 deleteById_tbRamo()
-
             elif escolha == 5:
                 deleteAll_tbRamo()
-            print('''
-    Deseja algo a mais nessa tabela?
-    1 - sim
-    2 - não
-            ''')
-            try:
-                res = 0
-                while res == 0:
-                    opcao = int(input('Digite a opção desejada: '))
+            elif escolha == 6:
+                print("Saindo da tabela tbRamo.")
+                break
+            else:
+                print('Opção inválida, digite novamente!')
 
-                    if opcao == 1:
-                        res = 1
-                        op = 0
-                    elif opcao == 2:
-                        print('''
-    Deseja algo a mais nessa tabela?
-    1 - sim
-    2 - não
-                        ''')
-                        try:
-                            resposta = 0
-                            while resposta == 0:
-                                opc = int(input('Digite a opção desejada: '))
-                                if opc == 1:
-                                    menu()
-                                    resposta == 1
-                                    res = 1
-                                    op = 1
-                                elif opc == 2:
-                                    break
+            continuar = input('Deseja realizar outra operação nesta tabela? (s/n): ')
+            if continuar.lower() != 's':
+                print("Saindo da tabela tbRamo.")
+                break
 
-                                elif opc != 1 or opc != 2:
-                                    print('Opção invalida, digite novamente!')
-                        except ValueError:
-                            print('Opção inválida. Por favor, digite um número.')
-            except ValueError:
-                print('Opção inválida. Por favor, digite um número.')
         except ValueError:
             print('Opção inválida. Por favor, digite um número.')
-            op = 0
 
 
 def tbServico():
-    op = 0
-    while op == 0:
+    while True:
         print("""
-    Qual operação deseja fazer?
-    1 - Consutar Id.
-    2 - Consutar tabela inteira.
-    3 - Fazer Update de informação
-    4 - Deletar Id.
-    5 - Deletar tudo.
-    """)
+        Qual operação deseja fazer na tabela tbServico?
+        1 - Consultar por ID.
+        2 - Consultar tabela inteira.
+        3 - Fazer Update de informação.
+        4 - Deletar por ID.
+        5 - Deletar tudo.
+        6 - Sair.
+        """)
+
         try:
             escolha = int(input('Digite a opção desejada: '))
 
-            if escolha < 1 or escolha > 5:
-                print('Opção invalida, digite novamente!')
-                op = 0
-            elif escolha == 1:
+            if escolha == 1:
                 findById_tbServico()
-
             elif escolha == 2:
                 getAll_tbServico()
-
             elif escolha == 3:
                 update_tbServico()
-
             elif escolha == 4:
                 deleteById_tbServicos()
-
             elif escolha == 5:
                 deleteAll_tbServico()
-            print('''
-    Deseja algo a mais nessa tabela?
-    1 - sim
-    2 - não
-            ''')
-            try:
-                res = 0
-                while res == 0:
-                    opcao = int(input('Digite a opção desejada: '))
+            elif escolha == 6:
+                print("Saindo da tabela tbServico.")
+                break
+            else:
+                print('Opção inválida, digite novamente!')
 
-                    if opcao == 1:
-                        res = 1
-                        op = 0
-                    elif opcao == 2:
-                        print('''
-    Deseja algo a mais nessa tabela?
-    1 - sim
-    2 - não
-                        ''')
-                        try:
-                            resposta = 0
-                            while resposta == 0:
-                                opc = int(input('Digite a opção desejada: '))
-                                if opc == 1:
-                                    menu()
-                                    resposta == 1
-                                    res = 1
-                                    op = 1
-                                elif opc == 2:
-                                    break
+            continuar = input('Deseja realizar outra operação nesta tabela? (s/n): ')
+            if continuar.lower() != 's':
+                print("Saindo da tabela tbServico.")
+                break
 
-                                elif opc != 1 or opc != 2:
-                                    print('Opção invalida, digite novamente!')
-                        except ValueError:
-                            print('Opção inválida. Por favor, digite um número.')
-            except ValueError:
-                print('Opção inválida. Por favor, digite um número.')
         except ValueError:
             print('Opção inválida. Por favor, digite um número.')
-            op = 0
 
 
 def tbFuncionario():
-    op = 0
-    while op == 0:
+    while True:
         print("""
-    Qual operação deseja fazer?
-    1 - Consutar Id.
-    2 - Consutar tabela inteira.
-    3 - Fazer Update de informação
-    4 - Deletar Id.
-    5 - Deletar tudo.
-    """)
+        Qual operação deseja fazer?
+        1 - Consultar por ID.
+        2 - Consultar tabela inteira.
+        3 - Fazer Update de informação.
+        4 - Deletar por ID.
+        5 - Deletar tudo.
+        6 - Sair.
+        """)
+
         try:
             escolha = int(input('Digite a opção desejada: '))
 
-            if escolha < 1 or escolha > 5:
-                print('Opção invalida, digite novamente!')
-                op = 0
-            elif escolha == 1:
+            if escolha == 1:
                 findById_tbFuncionarios()
-
             elif escolha == 2:
                 getAll_tbFuncionarios()
-
             elif escolha == 3:
                 update_tbFuncionario()
-
             elif escolha == 4:
                 deleteById_tbFuncionarios()
-
             elif escolha == 5:
                 deleteAll_tbFuncionario()
-            print('''
-    Deseja algo a mais nessa tabela?
-    1 - sim
-    2 - não
-            ''')
-            try:
-                res = 0
-                while res == 0:
-                    opcao = int(input('Digite a opção desejada: '))
+            elif escolha == 6:
+                print("Saindo da tabela de Funcionários.")
+                break
+            else:
+                print('Opção inválida, digite novamente!')
 
-                    if opcao == 1:
-                        res = 1
-                        op = 0
-                    elif opcao == 2:
-                        print('''
-    Deseja algo a mais nessa tabela?
-    1 - sim
-    2 - não
-                        ''')
-                        try:
-                            resposta = 0
-                            while resposta == 0:
-                                opc = int(input('Digite a opção desejada: '))
-                                if opc == 1:
-                                    menu()
-                                    resposta == 1
-                                    res = 1
-                                    op = 1
-                                elif opc == 2:
-                                    break
+            continuar = input('Deseja realizar outra operação nesta tabela? (s/n): ')
+            if continuar.lower() != 's':
+                print("Saindo da tabela de Funcionários.")
+                break
 
-                                elif opc != 1 or opc != 2:
-                                    print('Opção invalida, digite novamente!')
-                        except ValueError:
-                            print('Opção inválida. Por favor, digite um número.')
-            except ValueError:
-                print('Opção inválida. Por favor, digite um número.')
         except ValueError:
             print('Opção inválida. Por favor, digite um número.')
-            op = 0
 
 
 # principal
 menu()
+
