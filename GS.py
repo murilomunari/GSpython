@@ -44,6 +44,34 @@ def findById_tbAreas():
         conn.close()
 
 
+def findById_tbDoacoes():
+    conn = getConnection()
+    cursor = conn.cursor()
+
+    try:
+        id_escolhido = int(input("Digite o ID desejado: "))
+        # Use um placeholder para o valor do ID
+        sql_id = f"""
+            SELECT * FROM TB_DOACOES
+            WHERE ID_DOACAO = :id_escolhido
+        """
+        # Utilize o método execute com um dicionário de parâmetros
+        cursor.execute(sql_id, {"id_escolhido": id_escolhido})
+
+        result = cursor.fetchall()
+        if result:
+            print("ID encontrado com sucesso:")
+            for row in result:
+                print(row)
+        else:
+            print("ID não encontrado.")
+    except Exception as e:
+        print(f"Erro ao executar a consulta: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def findById_tbPaciente():
     conn = getConnection()
     cursor = conn.cursor()
@@ -152,6 +180,24 @@ def getAll_tbAreas():
     cursor = conn.cursor()
     sql_getAll = """
     SELECT * FROM TB_AREAS
+    """
+    try:
+        cursor.execute(sql_getAll)
+        result = cursor.fetchall()
+        for row in result:
+            print(row)
+    except Exception as e:
+        print(f'Erro ao trazer informações da tabela: {e}')
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def getAll_tbDoacoes():
+    conn = getConnection()
+    cursor = conn.cursor()
+    sql_getAll = """
+        SELECT * FROM TB_DOACOES
     """
     try:
         cursor.execute(sql_getAll)
@@ -275,6 +321,28 @@ def deleteById_tbAreas():
         conn.close
 
 
+def deleteById_tbDoacoes():
+    conn = getConnection()
+    cursor = conn.cursor()
+
+    try:
+        id_escolhido = int(input('Digite o ID desejado: '))
+        sql_id = f"""
+            DELETE FROM TB_DOACOES WHERE ID_DOACAO = :id_escolhido
+        """
+        cursor.execute(sql_id, {"id_escolhido": id_escolhido})
+
+        if cursor.rowcount > 0:
+            print(f'Informações do ID {id_escolhido} apagado com sucesso!')
+        else:
+            print(f'Nenhum registro encontrado para o ID {id_escolhido}. Nada foi apagado.')
+    except Exception as e:
+        print(f'Erro ao deletar as informações do ID {id_escolhido}: {e}')
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def deleteById_tbPaciente():
     conn = getConnection()
     cursor = conn.cursor()
@@ -379,6 +447,23 @@ def deleteAll_tbArea():
         conn.close
 
 
+def deleteAll_tbDoacoes():
+    conn = getConnection()
+    cursor = conn.cursor()
+
+    sql_deleteAll = """
+        DELETE FROM TB_DOACOES
+    """
+    try:
+        cursor.execute(sql_deleteAll)
+        print("Todos os registros da tabela TB_DOACOES foram apagados com sucesso.")
+    except Exception as e:
+        print(f'Erro ao deletar as informações da tabela TB_DOACOES: {e}')
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def deleteAll_tbPaciente():
     conn = getConnection()
     cursor = conn.cursor()
@@ -480,6 +565,45 @@ def update_tbArea():
 
         # Utilize o método execute com um dicionário de parâmetros
         cursor.execute(sql_update, {"nova_regiao": nova_regiao, "novo_cep": novo_cep, "id_escolhido": id_escolhido})
+
+        conn.commit()
+        print("Informações atualizadas com sucesso!")
+    except cx_Oracle.Error as e:
+        print(f'Erro ao atualizar as informações: {e}')
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def update_tbDoacoes():
+    conn = getConnection()
+    cursor = conn.cursor()
+
+    try:
+        id_escolhido = int(input('Digite o ID desejado: '))
+        novo_valor = float(input('Novo valor: '))
+        novo_tipo = input('Novo tipo: ')
+        nova_data = input('Nova data (no formato YYYY-MM-DD): ')
+        nova_empresa_doadora = int(input('Nova empresa doadora: '))
+
+        # Use :nome_da_variavel no lugar de ? no Oracle
+        sql_update = """
+            UPDATE TB_DOACOES
+            SET VALOR = :novo_valor, 
+                TIPO = :novo_tipo, 
+                DATA_DOACAO = TO_DATE(:nova_data, 'YYYY-MM-DD'), 
+                EMPRESA_DOADORA = :nova_empresa_doadora
+            WHERE ID_DOACAO = :id_escolhido
+        """
+
+        # Utilize o método execute com um dicionário de parâmetros
+        cursor.execute(sql_update, {
+            "novo_valor": novo_valor,
+            "novo_tipo": novo_tipo,
+            "nova_data": nova_data,
+            "nova_empresa_doadora": nova_empresa_doadora,
+            "id_escolhido": id_escolhido
+        })
 
         conn.commit()
         print("Informações atualizadas com sucesso!")
@@ -648,6 +772,28 @@ def cadastrarArea():
     return lista_de_dados_area
 
 
+def cadastrarDoacao():
+    print("Faça o cadastro da sua doação")
+    lista_de_dados_doacao = []
+
+    ID_DOACAO = int(input("ID da doação: "))
+    lista_de_dados_doacao.append(ID_DOACAO)
+
+    VALOR = float(input("Valor da doação: "))
+    lista_de_dados_doacao.append(VALOR)
+
+    TIPO = input("Tipo da doação: ")
+    lista_de_dados_doacao.append(TIPO)
+
+    DATA_DOACAO = input("Data da doação (no formato YYYY-MM-DD): ")
+    lista_de_dados_doacao.append(DATA_DOACAO)
+
+    EMPRESA_DOADORA = int(input("ID da empresa doadora: "))
+    lista_de_dados_doacao.append(EMPRESA_DOADORA)
+
+    return lista_de_dados_doacao
+
+
 def cadastrarPaciente():
     print("Faça seu cadastro para saber o seu resultado")
     lista_de_dados_paciente = []
@@ -754,6 +900,30 @@ def insert_area(local_area):
             print("Erro ao obter o próximo valor da sequência")
     except Exception as e:
         print(f'Erro ao inserir o registro da area: {e}')
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def insert_doacao(valor, tipo, data_doacao, empresa_doadora):
+    conn = getConnection()
+    cursor = conn.cursor()
+
+    sql_query = "INSERT INTO TB_DOACOES (ID_DOACAO, VALOR, TIPO, DATA_DOACAO, EMPRESA_DOADORA) VALUES (:0, :1, :2, TO_DATE(:3, 'YYYY-MM-DD'), :4)"
+
+    try:
+        cursor.execute("SELECT SQ_DOACAO.NEXTVAL FROM dual")
+        nextval_result = cursor.fetchone()
+
+        if nextval_result:
+            doacao_id = nextval_result[0]
+            cursor.execute(sql_query, (doacao_id, valor, tipo, data_doacao, empresa_doadora))
+            conn.commit()
+            print("Registro da doação inserido com sucesso. ID da doação:", doacao_id)
+        else:
+            print("Erro ao obter o próximo valor da sequência")
+    except Exception as e:
+        print(f'Erro ao inserir o registro da doação: {e}')
     finally:
         cursor.close()
         conn.close()
@@ -870,7 +1040,7 @@ def menu():
         print("""
         Qual operação deseja fazer?
         1 - tbArea
-        2 - tbPaciente
+        2 - tbDoacoes
         3 - tbEmpresa
         4 - tbRamo
         5 - tbServico
@@ -884,7 +1054,7 @@ def menu():
             if escolha == 1:
                 tbArea()
             elif escolha == 2:
-                tbPaciente()
+                tbDoacoes()
             elif escolha == 3:
                 tbEmpresa()
             elif escolha == 4:
@@ -1137,6 +1307,46 @@ def tbFuncionario():
             continuar = input('Deseja realizar outra operação nesta tabela? (s/n): ')
             if continuar.lower() != 's':
                 print("Saindo da tabela de Funcionários.")
+                break
+
+        except ValueError:
+            print('Opção inválida. Por favor, digite um número.')
+
+
+def tbDoacoes():
+    while True:
+        print("""
+        Qual operação deseja fazer na tabela TB_DOACOES?
+        1 - Consultar por ID.
+        2 - Consultar tabela inteira.
+        3 - Fazer Update de informação.
+        4 - Deletar por ID.
+        5 - Deletar tudo.
+        6 - Sair.
+        """)
+
+        try:
+            escolha = int(input('Digite a opção desejada: '))
+
+            if escolha == 1:
+                findById_tbDoacoes()
+            elif escolha == 2:
+                getAll_tbDoacoes()
+            elif escolha == 3:
+                update_tbDoacoes()
+            elif escolha == 4:
+                deleteById_tbDoacoes()
+            elif escolha == 5:
+                deleteAll_tbDoacoes()
+            elif escolha == 6:
+                print("Saindo da tabela TB_DOACOES.")
+                break
+            else:
+                print('Opção inválida, digite novamente!')
+
+            continuar = input('Deseja realizar outra operação nesta tabela? (s/n): ')
+            if continuar.lower() != 's':
+                print("Saindo da tabela TB_DOACOES.")
                 break
 
         except ValueError:
