@@ -22,12 +22,12 @@ def findById_tbAreas():
 
     try:
         id_escolhido = int(input("Digite o ID desejado: "))
-        # Use um placeholder para o valor do ID
+
         sql_id = f"""
             SELECT * FROM TB_AREAS
             WHERE ID_AREA = :id_escolhido
         """
-        # Utilize o método execute com um dicionário de parâmetros
+
         cursor.execute(sql_id, {"id_escolhido": id_escolhido})
 
         result = cursor.fetchall()
@@ -50,12 +50,12 @@ def findById_tbDoacoes():
 
     try:
         id_escolhido = int(input("Digite o ID desejado: "))
-        # Use um placeholder para o valor do ID
+
         sql_id = f"""
             SELECT * FROM TB_DOACOES
             WHERE ID_DOACAO = :id_escolhido
         """
-        # Utilize o método execute com um dicionário de parâmetros
+
         cursor.execute(sql_id, {"id_escolhido": id_escolhido})
 
         result = cursor.fetchall()
@@ -75,38 +75,54 @@ def findById_tbDoacoes():
 def findById_tbPaciente():
     conn = getConnection()
     cursor = conn.cursor()
-    id_escolhido = int(input("Digite o ID desejado: "))
-    sql_id = f"""
-    SELECT * FROM TB_PACIENTE WHERE ID_PACIENTE = {id_escolhido}
-    )"""
+
     try:
-        cursor.execute(sql_id)
-        print("ID enconstrado com sucesso")
+        id_escolhido = int(input("Digite o ID desejado: "))
+
+        sql_id = f"""
+            SELECT * FROM TB_PACIENTE
+            WHERE ID_PACIENTE = :id_escolhido
+        """
+
+        cursor.execute(sql_id, {"id_escolhido": id_escolhido})
+
         result = cursor.fetchall()
-        for row in result:
-            print(row)
+        if result:
+            print("ID encontrado com sucesso:")
+            for row in result:
+                print(row)
+        else:
+            print("ID não encontrado.")
     except Exception as e:
-        print(f"ID não encontrado: {e}")
+        print(f"Erro ao executar a consulta: {e}")
     finally:
         cursor.close()
         conn.close()
 
 
-def findById_tbEmpersa():
+def findById_tbEmpresa():
     conn = getConnection()
     cursor = conn.cursor()
-    id_escolhido = int(input("Digite o ID desejado: "))
-    sql_id = f"""
-    SELECT * FROM TB_EMPRESA WHERE ID_EMPRESA = {id_escolhido}
-    )"""
+
     try:
-        cursor.execute(sql_id)
-        print("ID enconstrado com sucesso")
+        id_escolhido = int(input("Digite o ID desejado: "))
+
+        sql_id = f"""
+            SELECT * FROM TB_EMPRESA
+            WHERE ID_EMPRESA = :id_escolhido
+        """
+
+        cursor.execute(sql_id, {"id_escolhido": id_escolhido})
+
         result = cursor.fetchall()
-        for row in result:
-            print(row)
+        if result:
+            print("ID encontrado com sucesso:")
+            for row in result:
+                print(row)
+        else:
+            print("ID não encontrado.")
     except Exception as e:
-        print(f"ID não encontrado: {e}")
+        print(f"Erro ao executar a consulta: {e}")
     finally:
         cursor.close()
         conn.close()
@@ -115,38 +131,54 @@ def findById_tbEmpersa():
 def findById_tbRamo():
     conn = getConnection()
     cursor = conn.cursor()
-    id_escolhido = int(input("Digite o ID desejado: "))
-    sql_id = f"""
-    SELECT * FROM TB_RAMO WHERE ID_RAMO = {id_escolhido}
-    )"""
+
     try:
-        cursor.execute(sql_id)
-        print("ID enconstrado com sucesso")
+        id_escolhido = int(input("Digite o ID desejado: "))
+
+        sql_id = f"""
+            SELECT * FROM TB_RAMO
+            WHERE ID_RAMO = :id_escolhido
+        """
+
+        cursor.execute(sql_id, {"id_escolhido": id_escolhido})
+
         result = cursor.fetchall()
-        for row in result:
-            print(row)
+        if result:
+            print("ID encontrado com sucesso:")
+            for row in result:
+                print(row)
+        else:
+            print("ID não encontrado.")
     except Exception as e:
-        print(f"ID não encontrado: {e}")
+        print(f"Erro ao executar a consulta: {e}")
     finally:
         cursor.close()
         conn.close()
 
 
-def findById_tbServico():
+def findById_tbServicos():
     conn = getConnection()
     cursor = conn.cursor()
-    id_escolhido = int(input("Digite o ID desejado: "))
-    sql_id = f"""
-    SELECT * FROM TB_SERVICOS WHERE ID_SERVICO = {id_escolhido}
-    )"""
+
     try:
-        cursor.execute(sql_id)
-        print("ID enconstrado com sucesso")
+        id_escolhido = int(input("Digite o ID desejado: "))
+
+        sql_id = f"""
+            SELECT * FROM TB_SERVICOS
+            WHERE ID_SERVICO = :id_escolhido
+        """
+
+        cursor.execute(sql_id, {"id_escolhido": id_escolhido})
+
         result = cursor.fetchall()
-        for row in result:
-            print(row)
+        if result:
+            print("ID encontrado com sucesso:")
+            for row in result:
+                print(row)
+        else:
+            print("ID não encontrado.")
     except Exception as e:
-        print(f"ID não encontrado: {e}")
+        print(f"Erro ao executar a consulta: {e}")
     finally:
         cursor.close()
         conn.close()
@@ -155,18 +187,26 @@ def findById_tbServico():
 def findById_tbFuncionarios():
     conn = getConnection()
     cursor = conn.cursor()
-    id_escolhido = int(input("Digite o ID desejado: "))
-    sql_id = f"""
-    SELECT * FROM TB_FUNCIONARIOS WHERE ID_FUNCIONARIO = {id_escolhido}
-    )"""
+
     try:
-        cursor.execute(sql_id)
-        print("ID enconstrado com sucesso")
+        id_escolhido = int(input("Digite o ID desejado: "))
+
+        sql_id = f"""
+            SELECT * FROM TB_FUNCIONARIOS
+            WHERE ID_FUNCIONARIO = :id_escolhido
+        """
+
+        cursor.execute(sql_id, {"id_escolhido": id_escolhido})
+
         result = cursor.fetchall()
-        for row in result:
-            print(row)
+        if result:
+            print("ID encontrado com sucesso:")
+            for row in result:
+                print(row)
+        else:
+            print("ID não encontrado.")
     except Exception as e:
-        print(f"ID não encontrado: {e}")
+        print(f"Erro ao executar a consulta: {e}")
     finally:
         cursor.close()
         conn.close()
@@ -556,14 +596,12 @@ def update_tbArea():
         nova_regiao = input('Nova região: ')
         novo_cep = int(input('Novo CEP: '))
 
-        # Use :nome_da_variavel no lugar de ? no Oracle
         sql_update = """
             UPDATE TB_AREAS
             SET REGIAO = :nova_regiao, CEP = :novo_cep
             WHERE ID_AREA = :id_escolhido
         """
 
-        # Utilize o método execute com um dicionário de parâmetros
         cursor.execute(sql_update, {"nova_regiao": nova_regiao, "novo_cep": novo_cep, "id_escolhido": id_escolhido})
 
         conn.commit()
@@ -586,7 +624,6 @@ def update_tbDoacoes():
         nova_data = input('Nova data (no formato YYYY-MM-DD): ')
         nova_empresa_doadora = int(input('Nova empresa doadora: '))
 
-        # Use :nome_da_variavel no lugar de ? no Oracle
         sql_update = """
             UPDATE TB_DOACOES
             SET VALOR = :novo_valor, 
@@ -596,7 +633,6 @@ def update_tbDoacoes():
             WHERE ID_DOACAO = :id_escolhido
         """
 
-        # Utilize o método execute com um dicionário de parâmetros
         cursor.execute(sql_update, {
             "novo_valor": novo_valor,
             "novo_tipo": novo_tipo,
@@ -623,14 +659,12 @@ def update_tbPaciente():
         novo_nome = input('Novo nome do paciente: ')
         novo_cpf = input('Novo CPF do paciente: ')
 
-        # Use :nome_da_variavel no lugar de ? no Oracle
         sql_update = """
             UPDATE TB_PACIENTE
             SET NM_PACIENTE = :novo_nome, CPF = :novo_cpf
             WHERE ID_PACIENTE = :id_escolhido
         """
 
-        # Utilize o método execute com um dicionário de parâmetros
         cursor.execute(sql_update, {"novo_nome": novo_nome, "novo_cpf": novo_cpf, "id_escolhido": id_escolhido})
 
         conn.commit()
@@ -653,14 +687,12 @@ def update_tbEmpresa():
         novo_email = input('Novo e-mail da empresa: ')
         novo_ramo = int(input('Novo ramo da empresa: '))
 
-        # Use :nome_da_variavel no lugar de ? no Oracle
         sql_update = """
             UPDATE TB_EMPRESA
             SET NM_EMPRESA = :novo_nome, NR_CNPJ = :novo_cnpj, EMAIL = :novo_email, RAMO = :novo_ramo
             WHERE ID_EMPRESA = :id_escolhido
         """
 
-        # Utilize o método execute com um dicionário de parâmetros
         cursor.execute(sql_update, {"novo_nome": novo_nome, "novo_cnpj": novo_cnpj, "novo_email": novo_email,
                                     "novo_ramo": novo_ramo, "id_escolhido": id_escolhido})
 
@@ -681,14 +713,12 @@ def update_tbRamo():
         id_escolhido = int(input('Digite o ID desejado: '))
         novo_nome = input('Novo nome do ramo: ')
 
-        # Use :nome_da_variavel no lugar de ? no Oracle
         sql_update = """
             UPDATE TB_RAMO
             SET NM_RAMO = :novo_nome
             WHERE ID_RAMO = :id_escolhido
         """
 
-        # Utilize o método execute com um dicionário de parâmetros
         cursor.execute(sql_update, {"novo_nome": novo_nome, "id_escolhido": id_escolhido})
 
         conn.commit()
@@ -708,14 +738,12 @@ def update_tbServico():
         id_escolhido = int(input('Digite o ID desejado: '))
         novo_nome = input('Novo nome do serviço: ')
 
-        # Use :nome_da_variavel no lugar de ? no Oracle
         sql_update = """
             UPDATE TB_SERVICOS
             SET DS_SERVICO = :novo_nome
             WHERE ID_SERVICO = :id_escolhido
         """
 
-        # Utilize o método execute com um dicionário de parâmetros
         cursor.execute(sql_update, {"novo_nome": novo_nome, "id_escolhido": id_escolhido})
 
         conn.commit()
@@ -735,14 +763,12 @@ def update_tbFuncionario():
         id_escolhido = int(input('Digite o ID desejado: '))
         novo_nome = input('Novo nome do funcionário: ')
 
-        # Use :nome_da_variavel no lugar de ? no Oracle
         sql_update = """
             UPDATE TB_FUNCIONARIOS
             SET NM_FUNCIONARIO = :novo_nome
             WHERE ID_FUNCIONARIO = :id_escolhido
         """
 
-        # Utilize o método execute com um dicionário de parâmetros
         cursor.execute(sql_update, {"novo_nome": novo_nome, "id_escolhido": id_escolhido})
 
         conn.commit()
@@ -1169,7 +1195,7 @@ def tbEmpresa():
             escolha = int(input('Digite a opção desejada: '))
 
             if escolha == 1:
-                findById_tbEmpersa()
+                findById_tbEmpresa()
             elif escolha == 2:
                 getAll_tbEmpresa()
             elif escolha == 3:
@@ -1249,7 +1275,7 @@ def tbServico():
             escolha = int(input('Digite a opção desejada: '))
 
             if escolha == 1:
-                findById_tbServico()
+                findById_tbServicos()
             elif escolha == 2:
                 getAll_tbServico()
             elif escolha == 3:
